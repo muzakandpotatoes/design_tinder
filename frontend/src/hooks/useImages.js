@@ -32,9 +32,31 @@ export function useImages() {
   }
 
   function updateRating(filename, rating) {
+    // Update images array
     setImages(prev => prev.map(img =>
       img.filename === filename ? { ...img, rating } : img
     ));
+
+    // Update grouped object
+    setGrouped(prev => {
+      const newGrouped = { a: [], b: [], c: [], d: [], f: [], unrated: [] };
+
+      // Copy all existing files
+      Object.entries(prev).forEach(([category, files]) => {
+        newGrouped[category] = [...files];
+      });
+
+      // Remove file from all categories
+      Object.keys(newGrouped).forEach(category => {
+        newGrouped[category] = newGrouped[category].filter(f => f !== filename);
+      });
+
+      // Add file to new category
+      const targetCategory = rating || 'unrated';
+      newGrouped[targetCategory].push(filename);
+
+      return newGrouped;
+    });
   }
 
   return { images, grouped, loading, updateRating, refresh: loadImages };
