@@ -1,9 +1,10 @@
 import { AppProvider, useAppContext } from './context/AppContext';
 import RatePage from './components/RatePage';
 import ReviewPage from './components/ReviewPage';
+import ExportImport from './components/ExportImport';
 
 function AppContent() {
-  const { currentPage, setCurrentPage, loading } = useAppContext();
+  const { currentPage, setCurrentPage, loading, refresh } = useAppContext();
 
   if (loading) {
     return (
@@ -35,6 +36,7 @@ function AppContent() {
             Review
           </a>
         </nav>
+        <ExportImport onImportComplete={refresh} />
       </div>
 
       {currentPage === 'rate' ? <RatePage /> : <ReviewPage />}

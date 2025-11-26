@@ -1,6 +1,7 @@
 function GridItem({ filename, rating, selected, onClick, onRate }) {
   const ratingClass = rating ? `rating-${rating}` : '';
   const selectedClass = selected ? 'selected' : '';
+  const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <div
@@ -8,49 +9,11 @@ function GridItem({ filename, rating, selected, onClick, onRate }) {
       data-filename={filename}
     >
       <img
-        src={`/images/${filename}`}
+        src={`${baseUrl}images/${filename}`}
         alt={filename}
         onClick={onClick}
         style={{ cursor: 'pointer' }}
       />
-      <div className="grid-controls">
-        <button
-          className="grid-btn good"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRate('good');
-          }}
-        >
-          J
-        </button>
-        <button
-          className="grid-btn fine"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRate('fine');
-          }}
-        >
-          K
-        </button>
-        <button
-          className="grid-btn bad"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRate('bad');
-          }}
-        >
-          L
-        </button>
-        <button
-          className="grid-btn unrate"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRate(null);
-          }}
-        >
-          X
-        </button>
-      </div>
     </div>
   );
 }

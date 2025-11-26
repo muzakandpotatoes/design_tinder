@@ -83,17 +83,27 @@ nav a:hover {
     letter-spacing: 0.5px;
 }
 
-.current-rating.good {
+.current-rating.a {
     background: #d4edda;
     color: #155724;
 }
 
-.current-rating.fine {
+.current-rating.b {
+    background: #d1f2eb;
+    color: #0c5460;
+}
+
+.current-rating.c {
     background: #fff3cd;
     color: #856404;
 }
 
-.current-rating.bad {
+.current-rating.d {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.current-rating.f {
     background: #f8d7da;
     color: #721c24;
 }
@@ -159,34 +169,56 @@ nav a:hover {
     font-weight: 700;
 }
 
-.rating-btn.good {
+.rating-btn.a {
     background: #28a745;
     color: white;
 }
 
-.rating-btn.good:hover {
+.rating-btn.a:hover {
     background: #218838;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
-.rating-btn.fine {
+.rating-btn.b {
+    background: #20c997;
+    color: white;
+}
+
+.rating-btn.b:hover {
+    background: #1ba87e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(32, 201, 151, 0.3);
+}
+
+.rating-btn.c {
     background: #ffc107;
     color: #333;
 }
 
-.rating-btn.fine:hover {
+.rating-btn.c:hover {
     background: #e0a800;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
 }
 
-.rating-btn.bad {
+.rating-btn.d {
+    background: #fd7e14;
+    color: white;
+}
+
+.rating-btn.d:hover {
+    background: #e8590c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(253, 126, 20, 0.3);
+}
+
+.rating-btn.f {
     background: #dc3545;
     color: white;
 }
 
-.rating-btn.bad:hover {
+.rating-btn.f:hover {
     background: #c82333;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
@@ -246,67 +278,6 @@ nav a:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.grid-controls {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: space-around;
-    padding: 8px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.grid-item:hover .grid-controls {
-    opacity: 1;
-}
-
-.grid-btn {
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 700;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: white;
-}
-
-.grid-btn.good {
-    background: #28a745;
-}
-
-.grid-btn.good:hover {
-    background: #218838;
-}
-
-.grid-btn.fine {
-    background: #ffc107;
-    color: #333;
-}
-
-.grid-btn.fine:hover {
-    background: #e0a800;
-}
-
-.grid-btn.bad {
-    background: #dc3545;
-}
-
-.grid-btn.bad:hover {
-    background: #c82333;
-}
-
-.grid-btn.unrate {
-    background: #6c757d;
-}
-
-.grid-btn.unrate:hover {
-    background: #5a6268;
 }
 
 .empty-category {
@@ -375,16 +346,24 @@ nav a:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Colored borders for rated images in single grid view */
-.grid-item.rating-good {
+/* Colored borders for rated images in single grid view only */
+.single-grid .grid-item.rating-a {
     border: 4px solid #28a745;
 }
 
-.grid-item.rating-fine {
+.single-grid .grid-item.rating-b {
+    border: 4px solid #20c997;
+}
+
+.single-grid .grid-item.rating-c {
     border: 4px solid #ffc107;
 }
 
-.grid-item.rating-bad {
+.single-grid .grid-item.rating-d {
+    border: 4px solid #fd7e14;
+}
+
+.single-grid .grid-item.rating-f {
     border: 4px solid #dc3545;
 }
 
@@ -450,15 +429,23 @@ nav a:hover {
 }
 
 /* Rating borders for lightbox */
-#lightbox-image.rating-good {
+#lightbox-image.rating-a {
     border-color: #28a745;
 }
 
-#lightbox-image.rating-fine {
+#lightbox-image.rating-b {
+    border-color: #20c997;
+}
+
+#lightbox-image.rating-c {
     border-color: #ffc107;
 }
 
-#lightbox-image.rating-bad {
+#lightbox-image.rating-d {
+    border-color: #fd7e14;
+}
+
+#lightbox-image.rating-f {
     border-color: #dc3545;
 }
 
@@ -490,4 +477,41 @@ nav a:hover {
         right: 10px;
         font-size: 30px;
     }
+}
+
+/* Export/Import controls */
+.export-import-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.export-btn,
+.import-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    background: white;
+    color: #007bff;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.export-btn:hover,
+.import-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+.export-btn:active,
+.import-btn:active {
+    transform: scale(0.95);
+}
+
+.import-message {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: 500;
 }

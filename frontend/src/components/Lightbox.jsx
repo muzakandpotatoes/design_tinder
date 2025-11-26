@@ -15,6 +15,7 @@ function Lightbox() {
 
   const currentIndex = images.findIndex(img => img.filename === lightboxFilename);
   const currentImage = images[currentIndex];
+  const baseUrl = import.meta.env.BASE_URL;
 
   const handleNavigate = (direction) => {
     const totalImages = images.length;
@@ -77,7 +78,7 @@ function Lightbox() {
         <img
           id="lightbox-image"
           className={ratingClass}
-          src={`/images/${lightboxFilename}`}
+          src={`${baseUrl}images/${lightboxFilename}`}
           alt={lightboxFilename}
           tabIndex="-1"
         />

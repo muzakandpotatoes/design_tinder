@@ -79,9 +79,11 @@ function RatePage() {
 
   // Keyboard shortcuts
   useKeyboard({
-    'j': () => handleRate('good'),
-    'k': () => handleRate('fine'),
-    'l': () => handleRate('bad'),
+    'a': () => handleRate('a'),
+    'b': () => handleRate('b'),
+    'c': () => handleRate('c'),
+    'd': () => handleRate('d'),
+    'f': () => handleRate('f'),
     ';': () => handleRate(null),
     'ArrowLeft': goToPrevious,
     'ArrowRight': goToNext,
@@ -93,6 +95,7 @@ function RatePage() {
 
   const ratedCount = images.filter(img => img.rating).length;
   const totalCount = images.length;
+  const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <div>
@@ -103,13 +106,12 @@ function RatePage() {
       <div className="image-container">
         {currentImage.rating && (
           <div className={`current-rating ${currentImage.rating}`}>
-            {currentImage.rating === 'good' ? 'jolly good' :
-             currentImage.rating === 'fine' ? "'kay" : 'lame'}
+            Grade: {currentImage.rating.toUpperCase()}
           </div>
         )}
         <img
           id="current-image"
-          src={`/images/${currentImage.filename}`}
+          src={`${baseUrl}images/${currentImage.filename}`}
           alt={currentImage.filename}
         />
       </div>
@@ -125,17 +127,25 @@ function RatePage() {
         </div>
 
         <div className="rating-buttons">
-          <button className="rating-btn good" onClick={() => handleRate('good')}>
-            <span>jolly good</span>
-            <kbd>J</kbd>
+          <button className="rating-btn a" onClick={() => handleRate('a')}>
+            <span>A</span>
+            <kbd>A</kbd>
           </button>
-          <button className="rating-btn fine" onClick={() => handleRate('fine')}>
-            <span>'kay</span>
-            <kbd>K</kbd>
+          <button className="rating-btn b" onClick={() => handleRate('b')}>
+            <span>B</span>
+            <kbd>B</kbd>
           </button>
-          <button className="rating-btn bad" onClick={() => handleRate('bad')}>
-            <span>lame</span>
-            <kbd>L</kbd>
+          <button className="rating-btn c" onClick={() => handleRate('c')}>
+            <span>C</span>
+            <kbd>C</kbd>
+          </button>
+          <button className="rating-btn d" onClick={() => handleRate('d')}>
+            <span>D</span>
+            <kbd>D</kbd>
+          </button>
+          <button className="rating-btn f" onClick={() => handleRate('f')}>
+            <span>F</span>
+            <kbd>F</kbd>
           </button>
           <button className="rating-btn skip" onClick={() => handleRate(null)}>
             <span>Skip</span>

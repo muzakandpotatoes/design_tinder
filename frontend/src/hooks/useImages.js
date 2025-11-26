@@ -3,7 +3,7 @@ import { getImages } from '../api';
 
 export function useImages() {
   const [images, setImages] = useState([]);
-  const [grouped, setGrouped] = useState({ good: [], fine: [], bad: [], unrated: [] });
+  const [grouped, setGrouped] = useState({ a: [], b: [], c: [], d: [], f: [], unrated: [] });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function useImages() {
     setGrouped(data);
 
     // Build alphabetically sorted flat list
-    const all = [...data.good, ...data.fine, ...data.bad, ...data.unrated].sort();
+    const all = [...data.a, ...data.b, ...data.c, ...data.d, ...data.f, ...data.unrated].sort();
     const ratingMap = {};
     Object.entries(data).forEach(([category, files]) => {
       files.forEach(f => {

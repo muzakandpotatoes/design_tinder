@@ -1,4 +1,1 @@
-selenium
 requests
-fastapi
-uvicorn[standard]

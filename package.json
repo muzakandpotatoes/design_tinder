@@ -1,0 +1,11 @@
+{
+  "homepage": "https://muzakandpotatoes.github.io/design_tinder",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}

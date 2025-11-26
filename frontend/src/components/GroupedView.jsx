@@ -2,10 +2,12 @@ import GridItem from './GridItem';
 
 function GroupedView({ grouped, onImageClick, onRate, columns }) {
   const categories = [
-    { key: 'good', label: 'jolly good', files: grouped.good },
-    { key: 'fine', label: "'kay", files: grouped.fine },
-    { key: 'bad', label: 'lame', files: grouped.bad },
-    { key: 'unrated', label: 'unrated', files: grouped.unrated },
+    { key: 'a', label: 'A', files: grouped.a },
+    { key: 'b', label: 'B', files: grouped.b },
+    { key: 'c', label: 'C', files: grouped.c },
+    { key: 'd', label: 'D', files: grouped.d },
+    { key: 'f', label: 'F', files: grouped.f },
+    { key: 'unrated', label: 'Unrated', files: grouped.unrated },
   ];
 
   return (
