@@ -20,7 +20,10 @@ function AppContent() {
   return (
     <div className="container">
       <div className="header">
-        <h1>Design Tinder</h1>
+        <div>
+          <h1>Design Tinder</h1>
+          <p className="subtitle">cf <a href="https://www.youtube.com/watch?v=0l1ZBdO9P3k" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=0l1ZBdO9P3k</a></p>
+        </div>
         <nav>
           <a
             href="#"
