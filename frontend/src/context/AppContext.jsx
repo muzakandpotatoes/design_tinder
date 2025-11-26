@@ -14,7 +14,8 @@ export function AppProvider({ children }) {
 
   // Review page state
   const [viewMode, setViewMode] = useState('grouped');
-  const [gridColumns, setGridColumns] = useState(5);
+  const [gridColumns, setGridColumns] = useState(8);
+  const [showRatings, setShowRatings] = useState(true);
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -73,6 +74,8 @@ export function AppProvider({ children }) {
     setViewMode,
     gridColumns,
     setGridColumns,
+    showRatings,
+    setShowRatings,
 
     // Lightbox
     lightboxOpen,

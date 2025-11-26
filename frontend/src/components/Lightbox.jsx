@@ -49,21 +49,17 @@ function Lightbox() {
   useKeyboard({
     'Escape': closeLightbox,
     'Enter': closeLightbox,
-    'j': () => handleRate('good'),
-    'k': () => handleRate('fine'),
-    'l': () => handleRate('bad'),
+    'a': () => handleRate('a'),
+    'b': () => handleRate('b'),
+    'c': () => handleRate('c'),
+    'd': () => handleRate('d'),
+    'f': () => handleRate('f'),
     ';': () => handleRate(null),
-    'w': () => handleNavigate('up'),
-    'a': () => handleNavigate('left'),
-    's': () => handleNavigate('down'),
-    'd': () => handleNavigate('right'),
     'ArrowUp': () => handleNavigate('up'),
-    'ArrowLeft': () => handleNavigate('left'),
     'ArrowDown': () => handleNavigate('down'),
+    'ArrowLeft': () => handleNavigate('left'),
     'ArrowRight': () => handleNavigate('right'),
   }, [currentImage, currentIndex, images, gridColumns]);
-
-  const ratingClass = currentImage?.rating ? `rating-${currentImage.rating}` : '';
 
   return (
     <div
@@ -77,11 +73,36 @@ function Lightbox() {
         </span>
         <img
           id="lightbox-image"
-          className={ratingClass}
           src={`${baseUrl}images/${lightboxFilename}`}
           alt={lightboxFilename}
           tabIndex="-1"
         />
+        <div className="lightbox-rating-buttons">
+          <button className={`rating-btn a ${currentImage?.rating === 'a' ? 'current' : ''}`} onClick={() => handleRate('a')}>
+            <span>A</span>
+            <kbd>A</kbd>
+          </button>
+          <button className={`rating-btn b ${currentImage?.rating === 'b' ? 'current' : ''}`} onClick={() => handleRate('b')}>
+            <span>B</span>
+            <kbd>B</kbd>
+          </button>
+          <button className={`rating-btn c ${currentImage?.rating === 'c' ? 'current' : ''}`} onClick={() => handleRate('c')}>
+            <span>C</span>
+            <kbd>C</kbd>
+          </button>
+          <button className={`rating-btn d ${currentImage?.rating === 'd' ? 'current' : ''}`} onClick={() => handleRate('d')}>
+            <span>D</span>
+            <kbd>D</kbd>
+          </button>
+          <button className={`rating-btn f ${currentImage?.rating === 'f' ? 'current' : ''}`} onClick={() => handleRate('f')}>
+            <span>F</span>
+            <kbd>F</kbd>
+          </button>
+          <button className={`rating-btn skip ${!currentImage?.rating ? 'current' : ''}`} onClick={() => handleRate(null)}>
+            <span>Skip</span>
+            <kbd>;</kbd>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ function ReviewPage() {
     setViewMode,
     gridColumns,
     setGridColumns,
+    showRatings,
+    setShowRatings,
     rate,
     openLightbox,
     lightboxOpen,
@@ -45,14 +47,33 @@ function ReviewPage() {
     <div>
       <div className="controls">
         <div className="controls-row">
+          <div className="keyboard-hints">
+            ← → ↑ ↓ to navigate · A/B/C/D/F to rate
+          </div>
+
+          <div className="view-toggle-buttons">
+            <button
+              className={`toggle-btn ${viewMode === 'grouped' ? 'active' : ''}`}
+              onClick={() => setViewMode('grouped')}
+            >
+              Grouped
+            </button>
+            <button
+              className={`toggle-btn ${viewMode === 'single' ? 'active' : ''}`}
+              onClick={() => setViewMode('single')}
+            >
+              Single Grid
+            </button>
+          </div>
+
           <div className="view-toggle">
             <label>
               <input
                 type="checkbox"
-                checked={viewMode === 'single'}
-                onChange={(e) => setViewMode(e.target.checked ? 'single' : 'grouped')}
+                checked={showRatings}
+                onChange={(e) => setShowRatings(e.target.checked)}
               />
-              Single Grid View
+              Show Ratings
             </label>
           </div>
 
@@ -78,11 +99,13 @@ function ReviewPage() {
           onImageClick={handleImageClick}
           onRate={handleRate}
           columns={gridColumns}
+          showRatings={showRatings}
         />
       ) : (
         <SingleGridView
           onImageClick={handleImageClick}
           onRate={handleRate}
+          showRatings={showRatings}
         />
       )}
 

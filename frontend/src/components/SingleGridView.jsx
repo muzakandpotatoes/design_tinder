@@ -3,8 +3,15 @@ import { useAppContext } from '../context/AppContext';
 import { useKeyboard } from '../hooks/useKeyboard';
 import ImageGrid from './ImageGrid';
 
-function SingleGridView({ onImageClick, onRate }) {
+function SingleGridView({ onImageClick, onRate, showRatings }) {
   const { images, selectedIndex, setSelectedIndex, gridColumns, openLightbox } = useAppContext();
+
+  // Auto-select first image on mount
+  useEffect(() => {
+    if (images.length > 0 && selectedIndex === 0) {
+      setSelectedIndex(0);
+    }
+  }, []);
 
   const handleNavigate = (direction) => {
     const totalImages = images.length;
@@ -12,16 +19,24 @@ function SingleGridView({ onImageClick, onRate }) {
 
     switch (direction) {
       case 'left':
-        newIndex = Math.max(0, selectedIndex - 1);
+        if (selectedIndex > 0) {
+          newIndex = selectedIndex - 1;
+        }
         break;
       case 'right':
-        newIndex = Math.min(totalImages - 1, selectedIndex + 1);
+        if (selectedIndex < totalImages - 1) {
+          newIndex = selectedIndex + 1;
+        }
         break;
       case 'up':
-        newIndex = Math.max(0, selectedIndex - gridColumns);
+        if (selectedIndex >= gridColumns) {
+          newIndex = selectedIndex - gridColumns;
+        }
         break;
       case 'down':
-        newIndex = Math.min(totalImages - 1, selectedIndex + gridColumns);
+        if (selectedIndex + gridColumns < totalImages) {
+          newIndex = selectedIndex + gridColumns;
+        }
         break;
     }
 
@@ -42,17 +57,15 @@ function SingleGridView({ onImageClick, onRate }) {
 
   // Keyboard shortcuts for grid navigation
   useKeyboard({
-    'w': () => handleNavigate('up'),
-    'a': () => handleNavigate('left'),
-    's': () => handleNavigate('down'),
-    'd': () => handleNavigate('right'),
     'ArrowUp': () => handleNavigate('up'),
     'ArrowLeft': () => handleNavigate('left'),
     'ArrowDown': () => handleNavigate('down'),
     'ArrowRight': () => handleNavigate('right'),
-    'j': () => handleRateSelected('good'),
-    'k': () => handleRateSelected('fine'),
-    'l': () => handleRateSelected('bad'),
+    'a': () => handleRateSelected('a'),
+    'b': () => handleRateSelected('b'),
+    'c': () => handleRateSelected('c'),
+    'd': () => handleRateSelected('d'),
+    'f': () => handleRateSelected('f'),
     ';': () => handleRateSelected(null),
     'Enter': handleOpenLightbox,
   }, [selectedIndex, images, gridColumns]);
@@ -68,6 +81,7 @@ function SingleGridView({ onImageClick, onRate }) {
         }}
         onRate={onRate}
         columns={gridColumns}
+        showRating={showRatings}
       />
     </div>
   );

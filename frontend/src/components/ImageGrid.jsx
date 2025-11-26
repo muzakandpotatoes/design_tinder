@@ -1,6 +1,6 @@
 import GridItem from './GridItem';
 
-function ImageGrid({ images, selectedIndex, onImageClick, onRate, columns }) {
+function ImageGrid({ images, selectedIndex, onImageClick, onRate, columns, showRating }) {
   return (
     <div
       className="image-grid"
@@ -14,6 +14,7 @@ function ImageGrid({ images, selectedIndex, onImageClick, onRate, columns }) {
           selected={idx === selectedIndex}
           onClick={() => onImageClick(idx)}
           onRate={(rating) => onRate(img.filename, rating)}
+          showRating={showRating}
         />
       ))}
     </div>
