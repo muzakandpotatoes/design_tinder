@@ -1,14 +1,17 @@
 // localStorage utility for managing ratings in the browser
 
-const STORAGE_KEY = 'design-tinder-ratings';
+function storageKey(collectionId) {
+  return `design-tinder-ratings-${collectionId}`;
+}
 
 /**
- * Get all ratings from localStorage
+ * Get all ratings from localStorage for a collection
+ * @param {string} collectionId
  * @returns {Object} Ratings object with filename as key and rating as value
  */
-export function getRatings() {
+export function getRatings(collectionId) {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(storageKey(collectionId));
     return stored ? JSON.parse(stored) : {};
   } catch (error) {
     console.error('Failed to load ratings:', error);
@@ -20,10 +23,11 @@ export function getRatings() {
  * Save a rating for a specific image
  * @param {string} filename - Image filename
  * @param {string|null} rating - Rating value ("a", "b", "c", "d", "f") or null to remove
+ * @param {string} collectionId
  */
-export function saveRating(filename, rating) {
+export function saveRating(filename, rating, collectionId) {
   try {
-    const ratings = getRatings();
+    const ratings = getRatings(collectionId);
 
     if (rating === null) {
       delete ratings[filename];
@@ -31,7 +35,7 @@ export function saveRating(filename, rating) {
       ratings[filename] = rating;
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ratings));
+    localStorage.setItem(storageKey(collectionId), JSON.stringify(ratings));
     return ratings;
   } catch (error) {
     console.error('Failed to save rating:', error);
@@ -40,18 +44,21 @@ export function saveRating(filename, rating) {
 }
 
 /**
- * Export all ratings as a JSON file download
+ * Export all ratings as a JSON file download.
+ * Embeds a _collection field so the file can be identified on re-import.
+ * @param {string} collectionId
  */
-export function exportRatings() {
+export function exportRatings(collectionId) {
   try {
-    const ratings = getRatings();
-    const dataStr = JSON.stringify(ratings, null, 2);
+    const ratings = getRatings(collectionId);
+    const payload = { _collection: collectionId, ...ratings };
+    const dataStr = JSON.stringify(payload, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
 
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `design-ratings-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `design-ratings-${collectionId}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -65,11 +72,15 @@ export function exportRatings() {
 }
 
 /**
- * Import ratings from a JSON file
+ * Import ratings from a JSON file into a collection.
+ * Backwards-compatible: old exports (flat {filename: rating} with no _collection key)
+ * are imported as-is into the current collection. New exports include a _collection
+ * key which is stripped before merging.
  * @param {File} file - JSON file to import
+ * @param {string} collectionId - Target collection
  * @returns {Promise<boolean>} Success status
  */
-export function importRatings(file) {
+export function importRatings(file, collectionId) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -77,16 +88,18 @@ export function importRatings(file) {
       try {
         const imported = JSON.parse(e.target.result);
 
-        // Validate it's an object
         if (typeof imported !== 'object' || imported === null) {
           throw new Error('Invalid ratings file format');
         }
 
-        // Merge with existing ratings (imported ratings take precedence)
-        const existing = getRatings();
-        const merged = { ...existing, ...imported };
+        // Strip _collection metadata key if present (backwards-compat epicycle:
+        // old exports are plain {filename: rating} objects and pass through unchanged)
+        const { _collection: _ignored, ...ratings } = imported;
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+        const existing = getRatings(collectionId);
+        const merged = { ...existing, ...ratings };
+
+        localStorage.setItem(storageKey(collectionId), JSON.stringify(merged));
         resolve(true);
       } catch (error) {
         console.error('Failed to import ratings:', error);
@@ -103,11 +116,12 @@ export function importRatings(file) {
 }
 
 /**
- * Clear all ratings (use with caution!)
+ * Clear all ratings for a collection
+ * @param {string} collectionId
  */
-export function clearAllRatings() {
+export function clearAllRatings(collectionId) {
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(storageKey(collectionId));
     return true;
   } catch (error) {
     console.error('Failed to clear ratings:', error);

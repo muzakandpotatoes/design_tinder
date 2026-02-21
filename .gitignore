@@ -1,5 +1,7 @@
 .venv/
 ratings.json
+/images/
+*.epub
 
 
 # Dependencies

@@ -1,12 +1,26 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useImages } from '../hooks/useImages';
 import { useRatings } from '../hooks/useRatings';
+import { loadCollections } from '../api';
 
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const { images, grouped, loading, updateRating, refresh } = useImages();
-  const { rate } = useRatings(updateRating);
+  const [collections, setCollections] = useState([]);
+  const [currentCollection, setCurrentCollectionState] = useState(null);
+
+  // Load collections on mount, default to first
+  useEffect(() => {
+    loadCollections().then(data => {
+      if (data.length > 0) {
+        setCollections(data);
+        setCurrentCollectionState(data[0]);
+      }
+    });
+  }, []);
+
+  const { images, grouped, loading, updateRating, refresh } = useImages(currentCollection?.id);
+  const { rate } = useRatings(updateRating, currentCollection?.id);
 
   // UI State
   const [currentPage, setCurrentPage] = useState('rate');
@@ -20,6 +34,13 @@ export function AppProvider({ children }) {
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxFilename, setLightboxFilename] = useState(null);
+
+  const setCurrentCollection = (collection) => {
+    setCurrentCollectionState(collection);
+    setSelectedIndex(0);
+    setLightboxOpen(false);
+    setLightboxFilename(null);
+  };
 
   const openLightbox = (filename) => {
     setLightboxFilename(filename);
@@ -58,6 +79,11 @@ export function AppProvider({ children }) {
   };
 
   const value = {
+    // Collections
+    collections,
+    currentCollection,
+    setCurrentCollection,
+
     // Data
     images,
     grouped,

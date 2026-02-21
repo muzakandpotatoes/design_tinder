@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useKeyboard } from '../hooks/useKeyboard';
-import { getNextUnrated } from '../api';
+import { getNextUnrated, getImageUrl } from '../api';
 
 function RatePage() {
-  const { images, rate } = useAppContext();
+  const { images, rate, currentCollection } = useAppContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentImage, setCurrentImage] = useState(null);
 
@@ -17,7 +17,7 @@ function RatePage() {
     if (images.length === 0) return;
 
     try {
-      const data = await getNextUnrated();
+      const data = await getNextUnrated(currentCollection?.id);
       if (data.filename) {
         const index = images.findIndex(img => img.filename === data.filename);
         if (index !== -1) {
@@ -95,7 +95,6 @@ function RatePage() {
 
   const ratedCount = images.filter(img => img.rating).length;
   const totalCount = images.length;
-  const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <div>
@@ -111,7 +110,7 @@ function RatePage() {
         )}
         <img
           id="current-image"
-          src={`${baseUrl}images/${currentImage.filename}`}
+          src={getImageUrl(currentCollection?.id, currentImage.filename)}
           alt={currentImage.filename}
         />
       </div>

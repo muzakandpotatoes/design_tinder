@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { useAppContext } from '../context/AppContext';
+import { getImageUrl } from '../api';
 
 function GridItem({ filename, rating, selected, onClick, onRate, showRating = true }) {
   const ratingClass = rating ? `rating-${rating}` : '';
   const selectedClass = selected ? 'selected' : '';
-  const baseUrl = import.meta.env.BASE_URL;
+  const { currentCollection } = useAppContext();
   const itemRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ function GridItem({ filename, rating, selected, onClick, onRate, showRating = tr
       data-filename={filename}
     >
       <img
-        src={`${baseUrl}images/${filename}`}
+        src={getImageUrl(currentCollection?.id, filename)}
         alt={filename}
         onClick={onClick}
         style={{ cursor: 'pointer' }}

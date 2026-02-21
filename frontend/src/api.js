@@ -1,19 +1,40 @@
 import { getRatings, saveRating as saveRatingToStorage } from './storage.js';
 
-// Cache for image manifest
-let imageManifest = null;
+const baseUrl = import.meta.env.BASE_URL;
+
+// Per-collection manifest cache
+const manifestCache = {};
 
 /**
- * Load image manifest from public folder
+ * Build the URL for an image in a collection
  */
-async function loadImageManifest() {
-  if (imageManifest) return imageManifest;
+export function getImageUrl(collectionId, filename) {
+  return `${baseUrl}images/${collectionId}/${filename}`;
+}
+
+/**
+ * Load available collections from public/collections.json
+ */
+export async function loadCollections() {
+  try {
+    const response = await fetch(`${baseUrl}collections.json`);
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to load collections:', error);
+    return [];
+  }
+}
+
+/**
+ * Load image manifest for a specific collection
+ */
+async function loadImageManifest(collectionId) {
+  if (manifestCache[collectionId]) return manifestCache[collectionId];
 
   try {
-    const baseUrl = import.meta.env.BASE_URL;
-    const response = await fetch(`${baseUrl}images/manifest.json`);
-    imageManifest = await response.json();
-    return imageManifest;
+    const response = await fetch(`${baseUrl}images/${collectionId}/manifest.json`);
+    manifestCache[collectionId] = await response.json();
+    return manifestCache[collectionId];
   } catch (error) {
     console.error('Failed to load image manifest:', error);
     return [];
@@ -21,11 +42,11 @@ async function loadImageManifest() {
 }
 
 /**
- * Get all images grouped by rating
+ * Get all images grouped by rating for a collection
  */
-export async function getImages() {
-  const allImages = await loadImageManifest();
-  const ratings = getRatings();
+export async function getImages(collectionId) {
+  const allImages = await loadImageManifest(collectionId);
+  const ratings = getRatings(collectionId);
 
   const grouped = {
     a: [],
@@ -49,19 +70,19 @@ export async function getImages() {
 }
 
 /**
- * Rate an image
+ * Rate an image in a collection
  */
-export async function rateImage(filename, rating) {
-  saveRatingToStorage(filename, rating);
+export async function rateImage(filename, rating, collectionId) {
+  saveRatingToStorage(filename, rating, collectionId);
   return { success: true, filename, rating };
 }
 
 /**
- * Get statistics about rating progress
+ * Get statistics about rating progress for a collection
  */
-export async function getStats() {
-  const allImages = await loadImageManifest();
-  const ratings = getRatings();
+export async function getStats(collectionId) {
+  const allImages = await loadImageManifest(collectionId);
+  const ratings = getRatings(collectionId);
 
   const rated = Object.keys(ratings).filter(
     filename => allImages.includes(filename) && ratings[filename] !== null
@@ -75,10 +96,10 @@ export async function getStats() {
 }
 
 /**
- * Get image at specific index
+ * Get image at specific index in a collection
  */
-export async function getCurrentImage(index) {
-  const allImages = await loadImageManifest();
+export async function getCurrentImage(index, collectionId) {
+  const allImages = await loadImageManifest(collectionId);
 
   if (!allImages.length) {
     throw new Error('No images found');
@@ -88,7 +109,7 @@ export async function getCurrentImage(index) {
     throw new Error('Invalid index');
   }
 
-  const ratings = getRatings();
+  const ratings = getRatings(collectionId);
   const filename = allImages[index];
 
   return {
@@ -100,13 +121,12 @@ export async function getCurrentImage(index) {
 }
 
 /**
- * Get next unrated image
+ * Get next unrated image in a collection
  */
-export async function getNextUnrated() {
-  const allImages = await loadImageManifest();
-  const ratings = getRatings();
+export async function getNextUnrated(collectionId) {
+  const allImages = await loadImageManifest(collectionId);
+  const ratings = getRatings(collectionId);
 
-  // Find first unrated image
   for (let idx = 0; idx < allImages.length; idx++) {
     const img = allImages[idx];
     if (!ratings[img]) {
@@ -119,7 +139,6 @@ export async function getNextUnrated() {
     }
   }
 
-  // If all rated, return first image
   if (allImages.length > 0) {
     return {
       filename: allImages[0],

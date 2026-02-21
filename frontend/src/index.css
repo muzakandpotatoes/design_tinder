@@ -555,6 +555,16 @@ nav a:hover {
     }
 }
 
+/* Collection selector */
+.collection-selector {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
 /* Export/Import controls */
 .export-import-controls {
     display: flex;

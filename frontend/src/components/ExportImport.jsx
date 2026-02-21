@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { exportRatings, importRatings } from '../storage';
 
-function ExportImport({ onImportComplete }) {
+function ExportImport({ onImportComplete, collectionId }) {
   const [importing, setImporting] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleExport = () => {
-    const success = exportRatings();
+    const success = exportRatings(collectionId);
     if (success) {
       setMessage('Ratings exported!');
       setTimeout(() => setMessage(''), 2000);
@@ -24,10 +24,9 @@ function ExportImport({ onImportComplete }) {
     setMessage('');
 
     try {
-      await importRatings(file);
+      await importRatings(file, collectionId);
       setMessage('Ratings imported successfully!');
 
-      // Notify parent to refresh data
       if (onImportComplete) {
         onImportComplete();
       }
@@ -38,7 +37,6 @@ function ExportImport({ onImportComplete }) {
       setTimeout(() => setMessage(''), 3000);
     } finally {
       setImporting(false);
-      // Reset file input
       e.target.value = '';
     }
   };

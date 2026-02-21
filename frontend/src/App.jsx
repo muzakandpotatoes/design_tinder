@@ -2,9 +2,10 @@ import { AppProvider, useAppContext } from './context/AppContext';
 import RatePage from './components/RatePage';
 import ReviewPage from './components/ReviewPage';
 import ExportImport from './components/ExportImport';
+import CollectionSelector from './components/CollectionSelector';
 
 function AppContent() {
-  const { currentPage, setCurrentPage, loading, refresh } = useAppContext();
+  const { currentPage, setCurrentPage, loading, refresh, currentCollection } = useAppContext();
 
   if (loading) {
     return (
@@ -24,6 +25,7 @@ function AppContent() {
           <h1>Design Tinder</h1>
           <p className="subtitle">cf <a href="https://www.youtube.com/watch?v=0l1ZBdO9P3k" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=0l1ZBdO9P3k</a></p>
         </div>
+        <CollectionSelector />
         <nav>
           <a
             href="#"
@@ -39,7 +41,7 @@ function AppContent() {
             Review
           </a>
         </nav>
-        <ExportImport onImportComplete={refresh} />
+        <ExportImport onImportComplete={refresh} collectionId={currentCollection?.id} />
       </div>
 
       {currentPage === 'rate' ? <RatePage /> : <ReviewPage />}

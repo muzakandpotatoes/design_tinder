@@ -1,5 +1,6 @@
 import { useAppContext } from '../context/AppContext';
 import { useKeyboard } from '../hooks/useKeyboard';
+import { getImageUrl } from '../api';
 
 function Lightbox() {
   const {
@@ -9,13 +10,13 @@ function Lightbox() {
     navigateLightbox,
     gridColumns,
     rate,
+    currentCollection,
   } = useAppContext();
 
   if (!lightboxFilename) return null;
 
   const currentIndex = images.findIndex(img => img.filename === lightboxFilename);
   const currentImage = images[currentIndex];
-  const baseUrl = import.meta.env.BASE_URL;
 
   const handleNavigate = (direction) => {
     const totalImages = images.length;
@@ -73,7 +74,7 @@ function Lightbox() {
         </span>
         <img
           id="lightbox-image"
-          src={`${baseUrl}images/${lightboxFilename}`}
+          src={getImageUrl(currentCollection?.id, lightboxFilename)}
           alt={lightboxFilename}
           tabIndex="-1"
         />
